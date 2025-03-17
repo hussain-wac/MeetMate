@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Button, Modal, Spin } from "antd";  // Import antd components
 import EventForm from "./EventForm";
 import useCalendar from "../hooks/useCalendar";
 
@@ -23,24 +23,40 @@ const MyCalendar = () => {
 
   return (
     <div style={{ height: "90vh", padding: "20px" }}>
-      <Button variant="contained" color="primary" onClick={openModal} sx={{ mb: 2 }}>
+      <Button type="primary" onClick={openModal} style={{ marginBottom: 16 }}>
         Add Event
       </Button>
 
-      <Dialog open={open} onClose={closeModal}>
-        <DialogTitle>Add Event</DialogTitle>
-        <DialogContent>
-          <EventForm onAddEvent={handleEventSubmit} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeModal} color="secondary">
+      <Modal
+        title="Add Event"
+        open={open}
+        onCancel={closeModal}
+        footer={[
+          <Button key="close" onClick={closeModal}>
             Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </Button>,
+        ]}
+      >
+        <EventForm onAddEvent={handleEventSubmit} />
+      </Modal>
 
       {loading ? (
-        <div>Loading events...</div>
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+            background: "rgba(255, 255, 255, 0.7)", // Optional background overlay for better visibility
+          }}
+        >
+          <Spin tip="Loading events..." />
+        </div>
       ) : (
         <Calendar
           localizer={localizer}

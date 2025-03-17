@@ -1,47 +1,67 @@
 // frontend/src/components/EventForm.js
 import React from "react";
 import useEventadd from "../hooks/useEventadd";
-import { TextField, Button, Box } from "@mui/material";
+import { Form, Input, Button } from "antd";
 
 const EventForm = ({ onAddEvent }) => {
   const { title, setTitle, start, setStart, end, setEnd, handleSubmit } = useEventadd(onAddEvent);
+  const [form] = Form.useForm();
+
+  const onFinish = () => {
+    handleSubmit(); // This is correct—calls handleSubmit without args
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 300 }}>
-        <TextField
-          label="Title"
+    <Form
+      form={form}
+      onFinish={onFinish}
+      layout="vertical"
+      style={{ minWidth: 300 }}
+    >
+      <Form.Item
+        label="Title"
+        name="title"
+        rules={[{ required: true, message: "Please enter a title" }]}
+      >
+        <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          variant="outlined"
-          fullWidth
-          required
+          placeholder="Enter event title"
         />
-        <TextField
-          label="Start"
+      </Form.Item>
+
+      <Form.Item
+        label="Start"
+        name="start"
+        rules={[{ required: true, message: "Please select a start time" }]}
+      >
+        <Input
           type="datetime-local"
-          InputLabelProps={{ shrink: true }}
           value={start}
           onChange={(e) => setStart(e.target.value)}
-          variant="outlined"
-          fullWidth
-          required
+          style={{ width: "100%" }}
         />
-        <TextField
-          label="End"
+      </Form.Item>
+
+      <Form.Item
+        label="End"
+        name="end"
+        rules={[{ required: true, message: "Please select an end time" }]}
+      >
+        <Input
           type="datetime-local"
-          InputLabelProps={{ shrink: true }}
           value={end}
           onChange={(e) => setEnd(e.target.value)}
-          variant="outlined"
-          fullWidth
-          required
+          style={{ width: "100%" }}
         />
-        <Button type="submit" variant="contained" color="primary">
+      </Form.Item>
+
+      <Form.Item>
+        <Button type="primary" htmlType="submit" block>
           Add Event
         </Button>
-      </Box>
-    </form>
+      </Form.Item>
+    </Form>
   );
 };
 

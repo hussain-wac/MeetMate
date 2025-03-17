@@ -11,6 +11,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import Schedule from "./components/Schedule";
 function App() {
   const user = useAtomValue(globalState);
   return (
@@ -22,11 +23,21 @@ function App() {
               path="/"
               element={user ? <Navigate to="/home" /> : <Login />}
             />
+            
             <Route
               path="/home"
               element={
                 <ProtectedRoute>
+                  
                   <Home />
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route
+              path="/schedule"
+              element={
+                <ProtectedRoute>
+                  <Schedule/>
                 </ProtectedRoute>
               }
             ></Route>

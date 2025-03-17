@@ -1,10 +1,10 @@
 import React from 'react';
 import { Avatar, Popover, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import {  useAtomValue } from 'jotai';
+import {  useAtom} from 'jotai';
 import { globalState } from '../../jotai/globalState';
 function Navbar() {
-  const user = useAtomValue(globalState);
+  const [user,setUser] = useAtom(globalState);
   console.log(user)
   const userMenu = (
     <div className="p-4 w-full">
@@ -16,7 +16,7 @@ function Navbar() {
         </div>
       </div>
       <div className="space-y-2">
-        <Button className="w-full" type="default" danger>
+        <Button className="w-full" type="default" danger onClick={() => setUser(null)}>
           Logout
         </Button>
       </div>
@@ -24,7 +24,7 @@ function Navbar() {
   );
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
-      <div className="text-2xl font-bold text-blue-600">
+      <div className="text-2xl font-bold text-gray-600">
         MeetMate
       </div>
       <div className="flex items-center">

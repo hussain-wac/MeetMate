@@ -1,12 +1,17 @@
 import React from "react";
 import { GoogleLogin } from "@react-oauth/google";
+import { Navigate } from "react-router-dom";
+import { useAtomValue } from "jotai";
+import { globalState } from "../jotai/globalState";
 import useAuth from "../hooks/useAuth";
 import logoImage from "../assets/vite.svg";
 import { Loader2 } from "lucide-react";
-
 const Login = () => {
   const { loading, handleGoogleLoginSuccess } = useAuth();
-
+  const user = useAtomValue(globalState);
+    if (user) {
+        return <Navigate to="/home" />;
+    }
   return (
     <div className="flex flex-col items-center justify-center min-h-screen  text-white px-4 sm:px-6">
       <div className="bg-blue-100 p-6 sm:p-8 rounded-xl shadow-xl w-full max-w-sm sm:max-w-md flex flex-col items-center space-y-6">

@@ -4,42 +4,49 @@ import { Navigate } from "react-router-dom";
 import { useAtomValue } from "jotai";
 import { globalState } from "../jotai/globalState";
 import useAuth from "../hooks/useAuth";
-import logoImage from "../assets/vite.svg";
 import { Loader2 } from "lucide-react";
+
 const Login = () => {
   const { loading, handleGoogleLoginSuccess } = useAuth();
   const user = useAtomValue(globalState);
-    if (user) {
-        return <Navigate to="/home" />;
-    }
+
+  if (user) {
+    return <Navigate to="/home" />;
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  text-white px-4 sm:px-6">
-      <div className="bg-blue-100 p-6 sm:p-8 rounded-xl shadow-xl w-full max-w-sm sm:max-w-md flex flex-col items-center space-y-6">
-        <h1 className="text-3xl sm:text-xl font-extrabold text-blue-800">
-          Welcome to MeetMate
-        </h1>
-        <img
-          src={logoImage}
-          alt="Fox and Cat Logo"
-          className="w-36 sm:w-48 object-contain hover:scale-105 transition-transform duration-300"
-        />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-gray-800">MeetMate</h1>
+          <p className="text-sm text-gray-500 mt-1">Internal Scheduling Tool</p>
+        </div>
+
         {loading ? (
-          <div className="flex items-center justify-center">
-            <Loader2 className="animate-spin text-4xl text-blue-500" />
+          <div className="flex justify-center py-4">
+            <Loader2 className="animate-spin text-blue-500 w-8 h-8" />
           </div>
         ) : (
-          <>
-            <p className="text-base sm:text-lg text-blue-900 text-center">
-              Sign in with Google
-            </p>
-            <div className="w-full flex justify-center">
+          <div className="space-y-6">
+            <div className="flex justify-center">
               <GoogleLogin
                 onSuccess={handleGoogleLoginSuccess}
                 onError={() => console.log("Login Failed")}
+                size="medium"
+                shape="rectangular"
+                theme="outline"
+                text="signin_with"
               />
             </div>
-          </>
+            <p className="text-center text-xs text-gray-400">
+              Secure login via Google
+            </p>
+          </div>
         )}
+
+        <div className="mt-8 text-center text-xs text-gray-400">
+          © {new Date().getFullYear()} MeetMate
+        </div>
       </div>
     </div>
   );

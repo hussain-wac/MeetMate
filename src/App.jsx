@@ -1,28 +1,39 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-
+import React from "react";
+import { Provider } from "jotai";
+import { useAtomValue } from "jotai";
+import { globalState } from "./jotai/globalState";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 function App() {
-  const [count, setCount] = useState(0);
-
+  const user = useAtomValue(globalState);
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>MeetMate + React</h1>
-
-      <p className="read-the-docs">
-        The complete Schedule Management System .
-      </p>
-    </>
+    <div>
+      <Provider>
+        <Router>
+          <Routes>
+            <Route
+              path="/"
+              element={user ? <Navigate to="/home" /> : <Login />}
+            />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            ></Route>
+          </Routes>
+        </Router>
+      </Provider>
+    </div>
   );
 }
-
 export default App;

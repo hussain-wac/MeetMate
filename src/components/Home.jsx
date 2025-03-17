@@ -1,8 +1,11 @@
 import React from 'react'
+import MyCalendar from './MyCalendar'
 
 function Home() {
   return (
-    <div>Welcome to home page</div>
+    <div>
+        <MyCalendar/>
+    </div>
   )
 }
 

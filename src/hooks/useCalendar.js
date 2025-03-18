@@ -11,7 +11,6 @@ const fetcher = async (url) => {
     throw error;
   }
 };
-
 const useCalendar = () => {
   const { data, error, isValidating } = useSWR(
     `${import.meta.env.VITE_BASE_URL}/api/meetings`,

@@ -7,14 +7,11 @@ const rooms = [
   { id: 2, name: "Huddle B", capacity: 4, features: ["Video"], icon: "/meeting.png" },
   { id: 3, name: "Board Room", capacity: 12, features: ["Video", "Whiteboard", "Catering"], icon: "/meeting.png" },
 ];
-
-// Feature icon mapping
 const featureIcons = {
   Video: <Monitor className="w-4 h-4" />,
   Whiteboard: <Wifi className="w-4 h-4" />,
   Catering: <Coffee className="w-4 h-4" />,
 };
-
 function RoomSelect() {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const navigate = useNavigate();

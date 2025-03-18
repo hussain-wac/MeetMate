@@ -20,8 +20,10 @@ const localizer = momentLocalizer(moment);
 
 const MyCalendar = ({ roomId }) => {
   const { view, events, onView, handleAddEvent, loading } = useCalendar(roomId);
-  const [open, setOpen] = useState(false);
+  const [openAddEvent, setOpenAddEvent] = useState(false);
+  const [openEventDetails, setOpenEventDetails] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -34,19 +36,29 @@ const MyCalendar = ({ roomId }) => {
     return () => observer.disconnect();
   }, []);
 
-  const closeModal = () => {
-    setOpen(false);
+  const closeAddEventModal = () => {
+    setOpenAddEvent(false);
     setSelectedSlot(null);
+  };
+
+  const closeEventDetailsModal = () => {
+    setOpenEventDetails(false);
+    setSelectedEvent(null);
   };
 
   const handleEventSubmit = async (eventData) => {
     await handleAddEvent(eventData);
-    closeModal();
+    closeAddEventModal();
   };
 
   const handleSelectSlot = (slotInfo) => {
     setSelectedSlot(slotInfo);
-    setOpen(true);
+    setOpenAddEvent(true);
+  };
+
+  const handleSelectEvent = (event) => {
+    setSelectedEvent(event);
+    setOpenEventDetails(true);
   };
 
   const eventStyleGetter = (event) => ({
@@ -88,7 +100,6 @@ const MyCalendar = ({ roomId }) => {
     "--today-text-color": isDarkMode ? "#FFFFFF" : "#1F2937",
   });
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
@@ -113,8 +124,9 @@ const MyCalendar = ({ roomId }) => {
       animate="visible"
     >
       <AnimatePresence>
-        {open && (
-          <Dialog open={open} onOpenChange={setOpen}>
+        {/* Add Event Dialog */}
+        {openAddEvent && (
+          <Dialog open={openAddEvent} onOpenChange={setOpenAddEvent}>
             <motion.div
               variants={modalVariants}
               initial="hidden"
@@ -129,10 +141,75 @@ const MyCalendar = ({ roomId }) => {
                   onAddEvent={handleEventSubmit}
                   initialStart={selectedSlot?.start}
                   initialEnd={selectedSlot?.end}
-                  onClose={closeModal}
+                  onClose={closeAddEventModal}
                 />
                 <DialogFooter>
-                  <Button variant="outline" onClick={closeModal}>
+                  <Button variant="outline" onClick={closeAddEventModal}>
+                    Close
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </motion.div>
+          </Dialog>
+        )}
+
+        {/* Event Details Dialog */}
+        {openEventDetails && selectedEvent && (
+          <Dialog open={openEventDetails} onOpenChange={setOpenEventDetails}>
+            <motion.div
+              variants={modalVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>{selectedEvent.title}</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Organizer
+                    </p>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {selectedEvent.organizer}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Project
+                    </p>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {selectedEvent.project}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Start Time
+                    </p>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {moment(selectedEvent.start).format("MMMM D, YYYY h:mm A")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      End Time
+                    </p>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {moment(selectedEvent.end).format("MMMM D, YYYY h:mm A")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Email
+                    </p>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {selectedEvent.email}
+                    </p>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={closeEventDetailsModal}>
                     Close
                   </Button>
                 </DialogFooter>
@@ -188,6 +265,7 @@ const MyCalendar = ({ roomId }) => {
             dayPropGetter={dayPropGetter}
             selectable
             onSelectSlot={handleSelectSlot}
+            onSelectEvent={handleSelectEvent}
           />
         </motion.div>
       )}

@@ -79,7 +79,7 @@ function RoomSelect() {
               : "bg-stone-200 text-stone-400 cursor-not-allowed"
           }`}
         >
-          Book Now
+          Got to room
         </button>
 
         <style>{`

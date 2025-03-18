@@ -53,7 +53,6 @@ const useEventForm = ({ initialStart, initialEnd, onClose, roomId }) => {
 
     try {
       await handleAddEvent(eventData);
-      console.log("event data :",eventData);
       form.reset();
       onClose();
     } catch (error) {

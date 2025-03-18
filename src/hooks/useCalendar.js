@@ -29,13 +29,25 @@ const useCalendar = () => {
 
   const handleAddEvent = async (newEvent) => {
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/meetings`, newEvent);
-      await mutate(`${import.meta.env.VITE_BASE_URL}/api/meetings?roomId=${newEvent.roomId}`); // Pass roomId in the URL for mutation
+      const newEventWithRoomId = {
+        ...newEvent,
+        roomId: roomId,  // Ensure roomId is included if required
+      };
+  
+      // Make the POST request to add the new event
+      await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/meetings`,
+        newEventWithRoomId,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+  
+      // Use mutate to re-fetch the data and reflect the new event
+      mutate(`${import.meta.env.VITE_BASE_URL}/api/meetings?roomId=${roomId}`, undefined, { revalidate: true });
     } catch (err) {
-      console.error("Error adding event:", err);
+      console.error("Error adding event:", err.response ? err.response.data : err.message);
     }
   };
-
+  
   return { 
     view, 
     events, 

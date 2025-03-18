@@ -18,7 +18,7 @@ const Login = () => {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">MeetMate</h1>
+          <h1 className="text-2xl font-bold text-gray-800">WACSpace</h1>
           <p className="text-sm text-gray-500 mt-1">Internal Scheduling Tool</p>
         </div>
 
@@ -45,7 +45,7 @@ const Login = () => {
         )}
 
         <div className="mt-8 text-center text-xs text-gray-400">
-          © {new Date().getFullYear()} MeetMate
+          © {new Date().getFullYear()} WACSpace
         </div>
       </div>
     </div>

@@ -7,7 +7,6 @@ function Home() {
   return (
     <div>
         <Navbar/>
-        
         <RoomSelect/>
     </div>
   )

@@ -23,12 +23,11 @@ function App() {
               path="/"
               element={user ? <Navigate to="/home" /> : <Login />}
             />
-            
+
             <Route
               path="/home"
               element={
                 <ProtectedRoute>
-                  
                   <Home />
                 </ProtectedRoute>
               }
@@ -37,7 +36,7 @@ function App() {
               path="/schedule"
               element={
                 <ProtectedRoute>
-                  <Schedule/>
+                  <Schedule />
                 </ProtectedRoute>
               }
             ></Route>

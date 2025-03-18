@@ -7,8 +7,7 @@ const useEventadd = (onAddEvent) => {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => { // Remove `e` parameter
     if (!title || !start || !end) return;
     const newEvent = {
       title,

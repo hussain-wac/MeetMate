@@ -1,66 +1,100 @@
-// frontend/src/components/EventForm.js
 import React from "react";
 import useEventadd from "../hooks/useEventadd";
-import { Form, Input, Button } from "antd";
+
+// Import shadcn UI components
+import { Button } from "./ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Input } from "./ui/input";
+import { useForm } from "react-hook-form";
 
 const EventForm = ({ onAddEvent }) => {
-  const { title, setTitle, start, setStart, end, setEnd, handleSubmit } = useEventadd(onAddEvent);
-  const [form] = Form.useForm();
+  const { title, setTitle, start, setStart, end, setEnd, handleSubmit: handleEventSubmit } = useEventadd(onAddEvent);
+  
+  // Set up react-hook-form (used by shadcn UI Form)
+  const form = useForm({
+    defaultValues: {
+      title: "",
+      start: "",
+      end: ""
+    }
+  });
 
-  const onFinish = () => {
-    handleSubmit(); // This is correct—calls handleSubmit without args
+  const onSubmit = () => {
+    handleEventSubmit();
   };
 
   return (
-    <Form
-      form={form}
-      onFinish={onFinish}
-      layout="vertical"
-      style={{ minWidth: 300 }}
-    >
-      <Form.Item
-        label="Title"
-        name="title"
-        rules={[{ required: true, message: "Please enter a title" }]}
-      >
-        <Input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter event title"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Enter event title" 
+                  value={title} 
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    field.onChange(e);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </Form.Item>
 
-      <Form.Item
-        label="Start"
-        name="start"
-        rules={[{ required: true, message: "Please select a start time" }]}
-      >
-        <Input
-          type="datetime-local"
-          value={start}
-          onChange={(e) => setStart(e.target.value)}
-          style={{ width: "100%" }}
+        <FormField
+          control={form.control}
+          name="start"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Start</FormLabel>
+              <FormControl>
+                <Input 
+                  type="datetime-local" 
+                  value={start}
+                  onChange={(e) => {
+                    setStart(e.target.value);
+                    field.onChange(e);
+                  }}
+                  className="w-full"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </Form.Item>
 
-      <Form.Item
-        label="End"
-        name="end"
-        rules={[{ required: true, message: "Please select an end time" }]}
-      >
-        <Input
-          type="datetime-local"
-          value={end}
-          onChange={(e) => setEnd(e.target.value)}
-          style={{ width: "100%" }}
+        <FormField
+          control={form.control}
+          name="end"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>End</FormLabel>
+              <FormControl>
+                <Input 
+                  type="datetime-local" 
+                  value={end}
+                  onChange={(e) => {
+                    setEnd(e.target.value);
+                    field.onChange(e);
+                  }}
+                  className="w-full"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </Form.Item>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit" block>
+        <Button type="submit" className="w-full">
           Add Event
         </Button>
-      </Form.Item>
+      </form>
     </Form>
   );
 };

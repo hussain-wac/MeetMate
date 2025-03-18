@@ -1,52 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import useCalendar from "../hooks/useCalendar";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "./ui/dialog";
-import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
-import EventForm from "./EventForm";
-import "../styles/calendarStyles.css";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDarkMode } from "../hooks/useDarkMode";
+import { EventDetailsDialog } from "./EventDetailsDialog";
+import { AddEventDialog } from "./AddEventDialog";
+import "../styles/calendarStyles.css";
 
 const localizer = momentLocalizer(moment);
 
 const MyCalendar = ({ roomId }) => {
   const { view, events, onView, handleAddEvent, loading } = useCalendar(roomId);
-  const [open, setOpen] = useState(false);
+  const [openAddEvent, setOpenAddEvent] = useState(false);
+  const [openEventDetails, setOpenEventDetails] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const isDarkMode = useDarkMode();
 
-  useEffect(() => {
-    const checkDarkMode = () => {
-      setIsDarkMode(document.documentElement.classList.contains("dark"));
-    };
-    checkDarkMode();
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
+  console.log(events);
 
-  const closeModal = () => {
-    setOpen(false);
+  const closeAddEventModal = () => {
+    setOpenAddEvent(false);
     setSelectedSlot(null);
+  };
+
+  const closeEventDetailsModal = () => {
+    setOpenEventDetails(false);
+    setSelectedEvent(null);
   };
 
   const handleEventSubmit = async (eventData) => {
     await handleAddEvent(eventData);
-    closeModal();
+    closeAddEventModal();
   };
 
   const handleSelectSlot = (slotInfo) => {
     setSelectedSlot(slotInfo);
-    setOpen(true);
+    setOpenAddEvent(true);
+  };
+
+  const handleSelectEvent = (event) => {
+    setSelectedEvent(event);
+    setOpenEventDetails(true);
   };
 
   const eventStyleGetter = (event) => ({
@@ -88,16 +86,9 @@ const MyCalendar = ({ roomId }) => {
     "--today-text-color": isDarkMode ? "#FFFFFF" : "#1F2937",
   });
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-  };
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
-    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2, ease: "easeIn" } },
   };
 
   const loaderVariants = {
@@ -113,34 +104,21 @@ const MyCalendar = ({ roomId }) => {
       animate="visible"
     >
       <AnimatePresence>
-        {open && (
-          <Dialog open={open} onOpenChange={setOpen}>
-            <motion.div
-              variants={modalVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            >
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Add Event</DialogTitle>
-                </DialogHeader>
-                <EventForm
-                  onAddEvent={handleEventSubmit}
-                  initialStart={selectedSlot?.start}
-                  initialEnd={selectedSlot?.end}
-                  onClose={closeModal}
-                  roomId={roomId}
-                />
-                <DialogFooter>
-                  <Button variant="outline" onClick={closeModal}>
-                    Close
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </motion.div>
-          </Dialog>
-        )}
+        <React.Fragment key="add-event-dialog">
+          <AddEventDialog
+            open={openAddEvent}
+            onOpenChange={setOpenAddEvent}
+            selectedSlot={selectedSlot}
+            onAddEvent={handleEventSubmit}
+          />
+        </React.Fragment>
+        <React.Fragment key="event-details-dialog">
+          <EventDetailsDialog
+            open={openEventDetails}
+            onOpenChange={setOpenEventDetails}
+            selectedEvent={selectedEvent}
+          />
+        </React.Fragment>
       </AnimatePresence>
 
       {loading ? (
@@ -189,6 +167,7 @@ const MyCalendar = ({ roomId }) => {
             dayPropGetter={dayPropGetter}
             selectable
             onSelectSlot={handleSelectSlot}
+            onSelectEvent={handleSelectEvent}
           />
         </motion.div>
       )}

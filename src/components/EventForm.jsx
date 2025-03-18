@@ -19,8 +19,8 @@ import {
 import useEventForm from "../hooks/useEventForm";
 
 
-const EventForm = ({ initialStart, initialEnd, onClose, roomId }) => {
-  const { form, loading, onSubmit } = useEventForm({ initialStart, initialEnd, onClose, roomId });
+const EventForm = ({ initialStart, initialEnd, onClose}) => {
+  const { form, loading, onSubmit } = useEventForm({ initialStart, initialEnd, onClose});
 
 
 

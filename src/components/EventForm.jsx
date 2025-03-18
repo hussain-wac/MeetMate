@@ -18,8 +18,11 @@ import {
 } from "./ui/select";
 import useEventForm from "../hooks/useEventForm";
 
+
 const EventForm = ({ initialStart, initialEnd, onClose, roomId }) => {
   const { form, loading, onSubmit } = useEventForm({ initialStart, initialEnd, onClose, roomId });
+
+
 
   const projectOptions = [
     { value: "project1", label: "Project 1" },

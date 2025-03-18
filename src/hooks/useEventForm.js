@@ -5,6 +5,8 @@ import moment from "moment";
 import dayjs from "dayjs";
 import useCalendar from "../hooks/useCalendar";
 import { z } from "zod";
+import { useAtomValue } from "jotai";
+import { globalState } from "../jotai/globalState";
 
 const eventSchema = z
   .object({
@@ -22,12 +24,13 @@ const eventSchema = z
 const useEventForm = ({ initialStart, initialEnd, onClose, roomId }) => {
   const { handleAddEvent } = useCalendar();
   const [loading, setLoading] = useState(false);
+  const user =useAtomValue(globalState);
 
   const form = useForm({
     resolver: zodResolver(eventSchema),
     defaultValues: {
-      title: "",
-      organizer: "",
+      title: "Team meeting",
+      organizer: user.name,
       project: "",
       start: initialStart ? moment(initialStart).format("YYYY-MM-DDTHH:mm") : "",
       end: initialEnd ? moment(initialEnd).format("YYYY-MM-DDTHH:mm") : "",

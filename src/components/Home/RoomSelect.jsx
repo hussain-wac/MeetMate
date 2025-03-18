@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, Check, Monitor, Wifi, Coffee } from "lucide-react";
 
@@ -50,7 +50,7 @@ function RoomSelect() {
                 {room.name}
               </h3>
 
-              <div class crescName="flex items-center text-stone-600 dark:text-stone-300 mb-4">
+              <div className="flex items-center text-stone-600 dark:text-stone-300 mb-4">
                 <Users className="w-5 h-5 mr-2" />
                 <span>{room.capacity} seats</span>
               </div>
@@ -81,45 +81,45 @@ function RoomSelect() {
         >
           Book Now
         </button>
+
+        <style>{`
+          .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+          }
+
+          .animate-bounce {
+            animation: bounce 0.5s infinite alternate;
+          }
+
+          .tooltip {
+            position: relative;
+          }
+
+          .tooltip:hover:after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+          }
+
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+
+          @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-4px); }
+          }
+        `}</style>
       </div>
-
-      <style jsx>{`
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-in;
-        }
-
-        .animate-bounce {
-          animation: bounce 0.5s infinite alternate;
-        }
-
-        .tooltip {
-          position: relative;
-        }
-
-        .tooltip:hover:after {
-          content: attr(data-tip);
-          position: absolute;
-          bottom: 100%;
-          left: 50%;
-          transform: translateX(-50%);
-          padding: 4px 8px;
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          border-radius: 4px;
-          font-size: 12px;
-          white-space: nowrap;
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes bounce {
-          from { transform: translateY(0); }
-          to { transform: translateY(-4px); }
-        }
-      `}</style>
     </div>
   );
 }

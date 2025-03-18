@@ -35,6 +35,7 @@ const useEventForm = ({ initialStart, initialEnd, onClose, roomId }) => {
       start: initialStart ? moment(initialStart).format("YYYY-MM-DDTHH:mm") : "",
       end: initialEnd ? moment(initialEnd).format("YYYY-MM-DDTHH:mm") : "",
       roomId: roomId,
+      email: user.email,
     },
   });
 
@@ -47,10 +48,12 @@ const useEventForm = ({ initialStart, initialEnd, onClose, roomId }) => {
       start: dayjs(data.start).toISOString(),
       end: dayjs(data.end).toISOString(),
       roomId: roomId,
+      email: user.email,
     };
 
     try {
       await handleAddEvent(eventData);
+      console.log("event data :",eventData);
       form.reset();
       onClose();
     } catch (error) {

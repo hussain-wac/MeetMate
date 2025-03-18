@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, Users, Check, Wifi, Monitor, Coffee } from "lucide-react";
+import { Users, Check, Monitor, Wifi, Coffee } from "lucide-react";
 
 const rooms = [
-  { id: 1, name: "Conference A", capacity: 8, features: ["Video", "Whiteboard"], icon: "/meeting.png" },
-  { id: 2, name: "Huddle B", capacity: 4, features: ["Video"], icon: "/meeting.png" },
-  { id: 3, name: "Board Room", capacity: 12, features: ["Video", "Whiteboard", "Catering"], icon: "/meeting.png" },
+  { id: 1, name: "Conference A", capacity: 8, features: ["Video", "Whiteboard"] },
+  { id: 2, name: "Huddle B", capacity: 4, features: ["Video"] },
+  { id: 3, name: "Board Room", capacity: 12, features: ["Video", "Whiteboard", "Catering"] },
 ];
+
 const featureIcons = {
-  Video: <Monitor className="w-4 h-4" />,
-  Whiteboard: <Wifi className="w-4 h-4" />,
-  Catering: <Coffee className="w-4 h-4" />,
+  Video: <Monitor className="w-5 h-5" />,
+  Whiteboard: <Wifi className="w-5 h-5" />,
+  Catering: <Coffee className="w-5 h-5" />,
 };
+
 function RoomSelect() {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const navigate = useNavigate();
@@ -23,77 +25,101 @@ function RoomSelect() {
   };
 
   return (
-    <div className="bg-stone-50 dark:bg-stone-950 min-h-screen py-12 transition-colors duration-300">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-xl p-8 sm:p-10 transition-colors duration-300">
-          <h2 className="text-3xl font-extrabold mb-3 text-center text-stone-800 dark:text-stone-100 tracking-tight">
-            Select a Meeting Room
-          </h2>
-          <p className="text-stone-500 dark:text-stone-400 text-center mb-10 text-lg">
-            Choose the perfect space for your next meeting
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white dark:from-stone-900 dark:to-stone-950 py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-8 text-indigo-900 dark:text-indigo-200 animate-fade-in">
+          Pick Your Room
+        </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-            {rooms.map((room) => (
-              <div
-                key={room.id}
-                onClick={() => setSelectedRoom(room.id)}
-                className={`relative flex flex-col bg-white dark:bg-stone-800 border rounded-xl p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
-                  selectedRoom === room.id
-                    ? "border-indigo-500 dark:border-indigo-400 ring-2 ring-indigo-200 dark:ring-indigo-900"
-                    : "border-stone-200 dark:border-stone-700 hover:border-indigo-300 dark:hover:border-indigo-600"
-                }`}
-              >
-                {selectedRoom === room.id && (
-                  <div className="absolute top-3 right-3 bg-indigo-500 dark:bg-indigo-400 text-white rounded-full p-1 shadow-md">
-                    <Check className="w-4 h-4" />
-                  </div>
-                )}
-
-                <div className="bg-indigo-50 dark:bg-indigo-900/20 w-14 h-14 rounded-lg mb-4 flex items-center justify-center transition-colors duration-300">
-                  <img src={room.icon} alt={room.name} className="w-8 h-8" />
-                </div>
-
-                <h3 className="font-semibold text-xl mb-2 text-stone-800 dark:text-stone-100">{room.name}</h3>
-
-                <div className="flex items-center text-sm mb-4 text-stone-600 dark:text-stone-400">
-                  <Users className="w-4 h-4 mr-2 text-stone-400 dark:text-stone-500" />
-                  <span>{room.capacity} people</span>
-                </div>
-
-                <div className="mt-auto pt-4 border-t border-stone-100 dark:border-stone-800 transition-colors duration-300">
-                  <div className="flex flex-wrap gap-2">
-                    {room.features.map((feature) => (
-                      <div
-                        key={feature}
-                        className="flex items-center bg-stone-100 dark:bg-stone-700 px-2 py-1 rounded-full text-xs font-medium text-stone-600 dark:text-stone-300 transition-colors duration-300"
-                      >
-                        {featureIcons[feature]}
-                        <span className="ml-1">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-center">
-            <button
-              onClick={handleContinue}
-              disabled={!selectedRoom}
-              className={`py-3 px-8 rounded-lg flex items-center justify-center font-semibold text-lg transition-all duration-300 ${
-                selectedRoom
-                  ? "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white shadow-md hover:shadow-lg"
-                  : "bg-stone-200 dark:bg-stone-700 text-stone-400 dark:text-stone-500 cursor-not-allowed"
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {rooms.map((room) => (
+            <div
+              key={room.id}
+              onClick={() => setSelectedRoom(room.id)}
+              className={`relative p-6 rounded-xl bg-white dark:bg-stone-800 shadow-md cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
+                selectedRoom === room.id 
+                  ? "ring-2 ring-indigo-500 scale-105" 
+                  : "hover:ring-2 hover:ring-indigo-300 dark:hover:ring-indigo-700"
               }`}
             >
-              <Calendar className="w-5 h-5 mr-2" />
-              Continue to Scheduling
-            </button>
-          </div>
+              {selectedRoom === room.id && (
+                <Check className="absolute top-2 right-2 w-6 h-6 text-indigo-500 animate-bounce" />
+              )}
+
+              <h3 className="text-xl font-semibold text-indigo-900 dark:text-indigo-100 mb-3">
+                {room.name}
+              </h3>
+
+              <div class crescName="flex items-center text-stone-600 dark:text-stone-300 mb-4">
+                <Users className="w-5 h-5 mr-2" />
+                <span>{room.capacity} seats</span>
+              </div>
+
+              <div className="flex gap-3">
+                {room.features.map((feature) => (
+                  <div
+                    key={feature}
+                    className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-full text-indigo-700 dark:text-indigo-300 tooltip"
+                    data-tip={feature}
+                  >
+                    {featureIcons[feature]}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
+
+        <button
+          onClick={handleContinue}
+          disabled={!selectedRoom}
+          className={`mt-10 mx-auto block px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 ${
+            selectedRoom
+              ? "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105 active:scale-95 shadow-lg"
+              : "bg-stone-200 text-stone-400 cursor-not-allowed"
+          }`}
+        >
+          Book Now
+        </button>
       </div>
+
+      <style jsx>{`
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-in;
+        }
+
+        .animate-bounce {
+          animation: bounce 0.5s infinite alternate;
+        }
+
+        .tooltip {
+          position: relative;
+        }
+
+        .tooltip:hover:after {
+          content: attr(data-tip);
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 4px 8px;
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          border-radius: 4px;
+          font-size: 12px;
+          white-space: nowrap;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+          from { transform: translateY(0); }
+          to { transform: translateY(-4px); }
+        }
+      `}</style>
     </div>
   );
 }

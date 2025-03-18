@@ -4,6 +4,9 @@ import RoomSelect from './Home/RoomSelect'
 import Navbar from './Layouts/Navbar'
 
 function Home() {
+
+
+ console.log("hell")
   return (
     <div className=' '>
         <Navbar/>

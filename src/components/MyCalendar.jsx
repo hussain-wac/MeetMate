@@ -130,7 +130,6 @@ const MyCalendar = ({ roomId }) => {
                   initialStart={selectedSlot?.start}
                   initialEnd={selectedSlot?.end}
                   onClose={closeModal}
-                  roomId={roomId}
                 />
                 <DialogFooter>
                   <Button variant="outline" onClick={closeModal}>

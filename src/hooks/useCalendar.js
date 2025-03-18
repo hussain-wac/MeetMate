@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useSWR, { mutate } from "swr";
 import axios from "axios";
+import { useSearchParams } from 'react-router-dom'
 const fetcher = async (url) => {
   try {
     const response = await axios.get(url);
@@ -10,7 +11,9 @@ const fetcher = async (url) => {
     throw error;
   }
 };
-const useCalendar = (roomId) => {
+const useCalendar = () => {
+  const [searchParams] = useSearchParams();
+  const roomId = searchParams.get('roomId');
   const { data, error, isValidating } = useSWR(
     `${import.meta.env.VITE_BASE_URL}/api/meetings?roomId=${roomId}`, // Pass roomId in the URL
     fetcher

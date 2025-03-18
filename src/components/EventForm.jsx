@@ -1,30 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
-import useEventadd from "../hooks/useEventadd";
 import { Button } from "./ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 import { Input } from "./ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
-import useCalendar from "../hooks/useCalendar"; // Import useCalendar to get the handleAddEvent function
+import useCalendar from "../hooks/useCalendar";
 
-const EventForm = ({ onAddEvent, initialStart, initialEnd }) => {
-  const { title, setTitle, start, setStart, end, setEnd } = useEventadd(onAddEvent);
-
-  const { handleAddEvent } = useCalendar(); // Use handleAddEvent from useCalendar
+const EventForm = ({ initialStart, initialEnd, onClose }) => {
+  // Accept onClose prop
+  const { handleAddEvent } = useCalendar();
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     defaultValues: {
       title: "",
       organizer: "",
       project: "",
-      start: initialStart ? moment(initialStart).format("YYYY-MM-DDTHH:mm") : "",
+      start: initialStart
+        ? moment(initialStart).format("YYYY-MM-DDTHH:mm")
+        : "",
       end: initialEnd ? moment(initialEnd).format("YYYY-MM-DDTHH:mm") : "",
     },
   });
 
   const onSubmit = async (data) => {
+    setLoading(true);
+
     const eventData = {
       title: data.title,
       organizer: data.organizer,
@@ -32,11 +48,16 @@ const EventForm = ({ onAddEvent, initialStart, initialEnd }) => {
       start: dayjs(data.start).toISOString(),
       end: dayjs(data.end).toISOString(),
     };
-    console.log("Submitted Event Data:", eventData);
-    
-    // Call the handleAddEvent to add the event to the API
-    await handleAddEvent(eventData);
-    onAddEvent(eventData); // Call the callback function passed to EventForm (if needed)
+
+    try {
+      await handleAddEvent(eventData);
+      form.reset(); 
+      onClose(); 
+    } catch (error) {
+      console.error("Error adding event:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const projectOptions = [
@@ -58,10 +79,7 @@ const EventForm = ({ onAddEvent, initialStart, initialEnd }) => {
                 <Input
                   placeholder="Enter event title"
                   {...field}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                    field.onChange(e);
-                  }}
+                  disabled={loading}
                 />
               </FormControl>
               <FormMessage />
@@ -76,7 +94,11 @@ const EventForm = ({ onAddEvent, initialStart, initialEnd }) => {
             <FormItem>
               <FormLabel>Organizer Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter organizer name" {...field} />
+                <Input
+                  placeholder="Enter organizer name"
+                  {...field}
+                  disabled={loading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -89,7 +111,11 @@ const EventForm = ({ onAddEvent, initialStart, initialEnd }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Project</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={loading}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a project" />
@@ -115,14 +141,7 @@ const EventForm = ({ onAddEvent, initialStart, initialEnd }) => {
             <FormItem>
               <FormLabel>Start</FormLabel>
               <FormControl>
-                <Input
-                  type="datetime-local"
-                  {...field}
-                  onChange={(e) => {
-                    setStart(e.target.value);
-                    field.onChange(e);
-                  }}
-                />
+                <Input type="datetime-local" {...field} disabled={loading} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -136,22 +155,15 @@ const EventForm = ({ onAddEvent, initialStart, initialEnd }) => {
             <FormItem>
               <FormLabel>End</FormLabel>
               <FormControl>
-                <Input
-                  type="datetime-local"
-                  {...field}
-                  onChange={(e) => {
-                    setEnd(e.target.value);
-                    field.onChange(e);
-                  }}
-                />
+                <Input type="datetime-local" {...field} disabled={loading} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Add Event
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? "Adding..." : "Add Event"}
         </Button>
       </form>
     </Form>

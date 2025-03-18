@@ -4,7 +4,13 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import useCalendar from "../hooks/useCalendar";
 import "../styles/MyCalendar.css";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import EventForm from "./EventForm";
@@ -84,6 +90,7 @@ const MyCalendar = () => {
             onAddEvent={handleEventSubmit}
             initialStart={selectedSlot?.start}
             initialEnd={selectedSlot?.end}
+            onClose={closeModal}
           />
           <DialogFooter>
             <Button variant="outline" onClick={closeModal}>
@@ -97,7 +104,9 @@ const MyCalendar = () => {
         <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center z-50 bg-white bg-opacity-70 dark:bg-black dark:bg-opacity-70">
           <div className="flex flex-col items-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <span className="mt-2 text-sm text-muted-foreground">Loading events...</span>
+            <span className="mt-2 text-sm text-muted-foreground">
+              Loading events...
+            </span>
           </div>
         </div>
       ) : (
@@ -114,7 +123,11 @@ const MyCalendar = () => {
             className={`h-full ${isDarkMode ? "dark-calendar" : ""}`}
             eventPropGetter={eventStyleGetter}
             dayPropGetter={dayPropGetter}
-            style={{ borderColor: isDarkMode ? calendarStyles.dark.border : calendarStyles.light.border }}
+            style={{
+              borderColor: isDarkMode
+                ? calendarStyles.dark.border
+                : calendarStyles.light.border,
+            }}
             selectable
             onSelectSlot={handleSelectSlot}
           />

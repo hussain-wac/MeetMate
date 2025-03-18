@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import moment from "moment";
+import React from "react";
 import { Button } from "./ui/button";
 import {
   Form,
@@ -17,48 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useForm } from "react-hook-form";
-import dayjs from "dayjs";
-import useCalendar from "../hooks/useCalendar";
+import useEventForm from "../hooks/useEventForm";
 
-const EventForm = ({ initialStart, initialEnd, onClose }) => {
-  // Accept onClose prop
-  const { handleAddEvent } = useCalendar();
-  const [loading, setLoading] = useState(false);
-
-  const form = useForm({
-    defaultValues: {
-      title: "",
-      organizer: "",
-      project: "",
-      start: initialStart
-        ? moment(initialStart).format("YYYY-MM-DDTHH:mm")
-        : "",
-      end: initialEnd ? moment(initialEnd).format("YYYY-MM-DDTHH:mm") : "",
-    },
-  });
-
-  const onSubmit = async (data) => {
-    setLoading(true);
-
-    const eventData = {
-      title: data.title,
-      organizer: data.organizer,
-      project: data.project,
-      start: dayjs(data.start).toISOString(),
-      end: dayjs(data.end).toISOString(),
-    };
-
-    try {
-      await handleAddEvent(eventData);
-      form.reset(); 
-      onClose(); 
-    } catch (error) {
-      console.error("Error adding event:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const EventForm = ({ initialStart, initialEnd, onClose, roomId }) => {
+  const { form, loading, onSubmit } = useEventForm({ initialStart, initialEnd, onClose, roomId });
 
   const projectOptions = [
     { value: "project1", label: "Project 1" },
@@ -76,13 +37,9 @@ const EventForm = ({ initialStart, initialEnd, onClose }) => {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Enter event title"
-                  {...field}
-                  disabled={loading}
-                />
+                <Input placeholder="Enter event title" {...field} disabled={loading} />
               </FormControl>
-              <FormMessage />
+              <FormMessage>{form.formState.errors.title?.message}</FormMessage>
             </FormItem>
           )}
         />
@@ -94,13 +51,9 @@ const EventForm = ({ initialStart, initialEnd, onClose }) => {
             <FormItem>
               <FormLabel>Organizer Name</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Enter organizer name"
-                  {...field}
-                  disabled={loading}
-                />
+                <Input placeholder="Enter organizer name" {...field} disabled={loading} />
               </FormControl>
-              <FormMessage />
+              <FormMessage>{form.formState.errors.organizer?.message}</FormMessage>
             </FormItem>
           )}
         />
@@ -111,11 +64,7 @@ const EventForm = ({ initialStart, initialEnd, onClose }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Project</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                disabled={loading}
-              >
+              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a project" />
@@ -129,7 +78,7 @@ const EventForm = ({ initialStart, initialEnd, onClose }) => {
                   ))}
                 </SelectContent>
               </Select>
-              <FormMessage />
+              <FormMessage>{form.formState.errors.project?.message}</FormMessage>
             </FormItem>
           )}
         />
@@ -143,7 +92,7 @@ const EventForm = ({ initialStart, initialEnd, onClose }) => {
               <FormControl>
                 <Input type="datetime-local" {...field} disabled={loading} />
               </FormControl>
-              <FormMessage />
+              <FormMessage>{form.formState.errors.start?.message}</FormMessage>
             </FormItem>
           )}
         />
@@ -157,7 +106,7 @@ const EventForm = ({ initialStart, initialEnd, onClose }) => {
               <FormControl>
                 <Input type="datetime-local" {...field} disabled={loading} />
               </FormControl>
-              <FormMessage />
+              <FormMessage>{form.formState.errors.end?.message}</FormMessage>
             </FormItem>
           )}
         />

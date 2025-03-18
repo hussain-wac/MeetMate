@@ -98,3 +98,27 @@
 .calendar-modal .ant-modal-footer {
     border-top: 1px solid #555; /* Dark gray border for modal footer */
 }
+/* Make sure dates are visible in dark mode */
+.dark-calendar .rbc-date-cell {
+    color: #fff; /* White text for dates */
+}
+
+.dark-calendar .rbc-row-content {
+    color: #fff; /* Ensure all text in the date cells is visible */
+}
+
+.dark-calendar .rbc-row-bg {
+    background-color: #0b0b0b; /* Ensure background is dark */
+}
+
+.dark-calendar .rbc-day-slot .rbc-time-slot {
+    border-top: 1px solid #555; /* Better visibility for time slots */
+}
+
+.dark-calendar .rbc-month-row {
+    border-bottom: 1px solid #555; /* Better visibility for month rows */
+}
+
+.dark-calendar .rbc-day-bg + .rbc-day-bg {
+    border-left: 1px solid #555; /* Better visibility for day borders */
+}

@@ -25,7 +25,7 @@ function Navbar() {
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
       <div className="text-2xl font-bold text-gray-600">
-      WACSpace
+      WACspace
       </div>
       <div className="flex items-center">
         <Popover

@@ -19,7 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const localizer = momentLocalizer(moment);
 
 const MyCalendar = ({ roomId }) => {
-  const { view, events, onView, handleAddEvent, loading } = useCalendar();
+  const { view, events, onView, handleAddEvent, loading } = useCalendar(roomId);
   const [open, setOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);

@@ -10,12 +10,11 @@ const fetcher = async (url) => {
     throw error;
   }
 };
-const useCalendar = () => {
+const useCalendar = (roomId) => {
   const { data, error, isValidating } = useSWR(
-    `${import.meta.env.VITE_BASE_URL}/api/meetings`,
+    `${import.meta.env.VITE_BASE_URL}/api/meetings?roomId=${roomId}`, // Pass roomId in the URL
     fetcher
   );
-
   const events = data?.map((event) => ({
     ...event,
     start: new Date(event.start),
@@ -28,7 +27,7 @@ const useCalendar = () => {
   const handleAddEvent = async (newEvent) => {
     try {
       await axios.post(`${import.meta.env.VITE_BASE_URL}/api/meetings`, newEvent);
-      await mutate(`${import.meta.env.VITE_BASE_URL}/api/meetings`);
+      await mutate(`${import.meta.env.VITE_BASE_URL}/api/meetings?roomId=${newEvent.roomId}`); // Pass roomId in the URL for mutation
     } catch (err) {
       console.error("Error adding event:", err);
     }

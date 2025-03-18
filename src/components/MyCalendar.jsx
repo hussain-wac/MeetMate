@@ -16,7 +16,7 @@ const localizer = momentLocalizer(moment);
 const calendarStyles = {
   light: {
     event: {
-      backgroundColor: "#000", // Black event background
+      backgroundColor: "##0b0b0b", // Black event background
       color: "#fff", // White text
       borderRadius: "2px",
     },
@@ -31,12 +31,12 @@ const calendarStyles = {
   },
   dark: {
     event: {
-      backgroundColor: "#000", // Black event background
+      backgroundColor: "##0b0b0b", // Black event background
       color: "#fff", // White text
       borderRadius: "2px",
     },
     today: {
-      backgroundColor: "#000", // Black background for today
+      backgroundColor: "##0b0b0b", // Black background for today
     },
     header: {
       backgroundColor: "#2c2c2c", // Dark gray background for header
@@ -62,7 +62,7 @@ const MyCalendar = () => {
   // Custom event style
   const eventStyleGetter = (event) => {
     const style = {
-      backgroundColor: event.color || (isDarkMode ? "#808080" : "#ADD8E6"), // Gray for dark mode, light blue for light mode
+      backgroundColor: event.color || (isDarkMode ? "#2BA6F1" : "#83E0FC"), // Gray for dark mode, light blue for light mode
       color: isDarkMode ? "#fff" : "#000", // White text in dark mode, black text in light mode
       borderRadius: "2px",
       border: "none",
@@ -72,9 +72,7 @@ const MyCalendar = () => {
     };
     return { style };
   };
-  
 
-  // Custom day style
   const dayPropGetter = (date) => {
     const today = moment().startOf('day').toDate();
     const isToday = moment(date).isSame(today, 'day');
@@ -90,7 +88,7 @@ const MyCalendar = () => {
   };
 
   return (
-    <div className="h-[90vh] p-8 bg-white dark:bg-black">
+    <div className="h-[90vh] p-8 light:bg-white">
       <Button
         className="mb-4"
         onClick={openModal}

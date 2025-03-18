@@ -5,7 +5,7 @@ import Navbar from './Layouts/Navbar'
 
 function Home() {
   return (
-    <div>
+    <div className=' '>
         <Navbar/>
         <RoomSelect/>
     </div>

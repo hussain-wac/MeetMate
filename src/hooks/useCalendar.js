@@ -1,7 +1,6 @@
 import { useState } from "react";
 import useSWR, { mutate } from "swr";
 import axios from "axios";
-
 const fetcher = async (url) => {
   try {
     const response = await axios.get(url);
@@ -11,7 +10,6 @@ const fetcher = async (url) => {
     throw error;
   }
 };
-
 const useCalendar = () => {
   const { data, error, isValidating } = useSWR(
     `${import.meta.env.VITE_BASE_URL}/api/meetings`,

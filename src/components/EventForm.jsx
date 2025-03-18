@@ -1,27 +1,31 @@
 import React from "react";
-import useEventadd from "../hooks/useEventadd";
-
-// Import shadcn UI components
 import { Button } from "./ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 import { Input } from "./ui/input";
-import { useForm } from "react-hook-form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import useEventForm from "../hooks/useEventForm";
 
-const EventForm = ({ onAddEvent }) => {
-  const { title, setTitle, start, setStart, end, setEnd, handleSubmit: handleEventSubmit } = useEventadd(onAddEvent);
-  
-  // Set up react-hook-form (used by shadcn UI Form)
-  const form = useForm({
-    defaultValues: {
-      title: "",
-      start: "",
-      end: ""
-    }
-  });
+const EventForm = ({ initialStart, initialEnd, onClose, roomId }) => {
+  const { form, loading, onSubmit } = useEventForm({ initialStart, initialEnd, onClose, roomId });
 
-  const onSubmit = () => {
-    handleEventSubmit();
-  };
+  const projectOptions = [
+    { value: "project1", label: "Project 1" },
+    { value: "project2", label: "Project 2" },
+    { value: "project3", label: "Project 3" },
+  ];
 
   return (
     <Form {...form}>
@@ -33,16 +37,48 @@ const EventForm = ({ onAddEvent }) => {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="Enter event title" 
-                  value={title} 
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                    field.onChange(e);
-                  }}
-                />
+                <Input placeholder="Enter event title" {...field} disabled={loading} />
               </FormControl>
-              <FormMessage />
+              <FormMessage>{form.formState.errors.title?.message}</FormMessage>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="organizer"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Organizer Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter organizer name" {...field} disabled={loading} />
+              </FormControl>
+              <FormMessage>{form.formState.errors.organizer?.message}</FormMessage>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="project"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Project</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a project" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {projectOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage>{form.formState.errors.project?.message}</FormMessage>
             </FormItem>
           )}
         />
@@ -54,17 +90,9 @@ const EventForm = ({ onAddEvent }) => {
             <FormItem>
               <FormLabel>Start</FormLabel>
               <FormControl>
-                <Input 
-                  type="datetime-local" 
-                  value={start}
-                  onChange={(e) => {
-                    setStart(e.target.value);
-                    field.onChange(e);
-                  }}
-                  className="w-full"
-                />
+                <Input type="datetime-local" {...field} disabled={loading} />
               </FormControl>
-              <FormMessage />
+              <FormMessage>{form.formState.errors.start?.message}</FormMessage>
             </FormItem>
           )}
         />
@@ -76,23 +104,15 @@ const EventForm = ({ onAddEvent }) => {
             <FormItem>
               <FormLabel>End</FormLabel>
               <FormControl>
-                <Input 
-                  type="datetime-local" 
-                  value={end}
-                  onChange={(e) => {
-                    setEnd(e.target.value);
-                    field.onChange(e);
-                  }}
-                  className="w-full"
-                />
+                <Input type="datetime-local" {...field} disabled={loading} />
               </FormControl>
-              <FormMessage />
+              <FormMessage>{form.formState.errors.end?.message}</FormMessage>
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Add Event
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? "Adding..." : "Add Event"}
         </Button>
       </form>
     </Form>

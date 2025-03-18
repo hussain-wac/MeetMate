@@ -4,22 +4,51 @@ import { Navigate } from "react-router-dom";
 import { useAtomValue } from "jotai";
 import { globalState } from "../jotai/globalState";
 import useAuth from "../hooks/useAuth";
-import { Loader2 } from "lucide-react";
+import { Loader2,Moon,Sun } from "lucide-react";
+import { Button } from "./ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useTheme } from "../components/theme-provider"
 
 const Login = () => {
   const { loading, handleGoogleLoginSuccess } = useAuth();
   const user = useAtomValue(globalState);
-
+  const { setTheme } = useTheme()
   if (user) {
     return <Navigate to="/home" />;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+<div >
+      <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme("light")}>
+          Light
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
+          Dark
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
+          System
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+        <div className="min-h-screen flex items-center justify-center p-4">
+      <div className=" rounded-lg shadow-md p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">WACSpace</h1>
-          <p className="text-sm text-gray-500 mt-1">Internal Scheduling Tool</p>
+          <h1 className="text-2xl font-bold ">WACSpace</h1>
+          <p className="text-sm  mt-1">Internal Scheduling Tool</p>
         </div>
 
         {loading ? (
@@ -49,6 +78,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+</div>
   );
 };
 
